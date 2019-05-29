@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>RxJS maps</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+
+        <style type="text/css">
+        .reveal::after {
+            content: "";
+            background: url(images/bg-stars1.jpg);
+            opacity: 0.3;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+                    <h1>Which map is <code>switchMap</code>?</h1>
+                    <div>and other bad puns...</div>
+                </section>
+
+                <section>
+                    <h1>Discussion</h1>
+                    <ul>
+                        <li><code>#angular-training</code> channel in Slack</li>                        
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Have you seen this?</h2>
+                    <pre><code data-trim data-noescape class="typescript">
+                        @Effect() loadItems$ = this.actions$.pipe(
+                            ofType(ActionTypes.Load),
+                            <mark>switchMap</mark>((action: LoadItemsAction) => this.itemsService
+                                .loadItems(action.payload)
+                                .pipe(
+                                    map((items: Item[]) => new LoadItemsSuccessAction(item)),
+                                    catchError((err) => Observable.of(new LoadItemsFailureAction(err)))
+                                )
+                            ),
+                        );
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h1>Why <a target="_blank" href="https://rxmarbles.com/#switchMap"><code>switchMap</code></a>?</h1>
+                    <div class="fragment">But first...</div>
+                </section>
+
+                <section>
+                    <h1>JavaScript arrays</h1>
+                    <ul>
+                        <li>concat</li>
+                        <li>filter</li>
+                        <li>find</li>
+                        <li>flatMap</li>
+                        <li><a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map"><code>map</code></a></li>
+                        <li>reduce</li>                        
+                    </ul>                    
+                </section>
+
+                <section>
+                    <h2>Easy?</h2>
+                    <img class="fragment" src="images/caveman.jpg" style="margin: 1em; height: 300px;" />
+                </section>
+
+                <section>
+                    <h2>A little crazier...</h2>
+                    <div class="fragment">
+                        <div>What if you have an <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap">array of arrays?</a></div>
+                        <div class="fragment">                            
+                            <pre><code data-trim data-noescape class="typescript">
+                                let arr1 = ["it's Sunny in", "", "California"];
+
+                                arr1.map(x => x.split(" "));
+                                // [["it's","Sunny","in"],[""],["California"]]
+                                
+                                arr1.<mark>flatMap</mark>(x => x.split(" "));
+                                // ["it's","Sunny","in", "", "California"]
+                            </code></pre>
+                        </div>                        
+                    </div>
+                </section>
+
+                <section>
+                    <img src="images/simple.jpg" style="margin: 1em; height: 300px;" />
+                </section>
+
+                <section>
+                    <h2><code>Arrays are like Streams</code></h2>
+                    <div>(aka <code>Observables</code>)</div>
+                </section>
+
+                <section>
+                    <div>In fact...</div>
+                    <h2 class="fragment">RxJS's <a target="_blank" href="https://rxmarbles.com/#switchMap"><code>switchMap</code></a> came from Array's <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap"><code>flatMap</code></a></h2>                    
+                    <div class="fragment">Many others:</div>
+                    <ul class="fragment" style="margin-top: 1em">
+                        <li>mergeMap (aka flatMap)</li>
+                        <li>switchMap</li>
+                        <li>concatMap</li>
+                        <li>exhaustMap</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>I know what you're thinking...</h2>
+                    <img class="fragment" src="images/yes.jpg" style="margin: 1em; height: 300px;" />
+                </section>
+
+                <section>                    
+                    <img src="images/map.jpg" style="margin: 1em; height: 300px;" />
+                </section>
+
+                <section>
+                    <h2><a target="_blank" href="https://rxmarbles.com/#mergeMap"><code>mergeMap</code></a></h2>
+                </section>
+
+                <section>
+                    <h2><a target="_blank" href="https://rxmarbles.com/#switchMap"><code>switchMap</code></a></h2>
+                </section>
+
+                <section>
+                    <h2><a target="_blank" href="https://rxmarbles.com/#concatMap"><code>concatMap</code></a></h2>
+                </section>
+
+                <section>
+                    <h2><a target="_blank" href="https://www.learnrxjs.io/operators/transformation/exhaustmap.html"><code>exhaustMap</code></a></h2>
+                </section>
+
+                <section>
+                    <ul>
+                        <li><a target="_blank" href="https://rxmarbles.com/#mergeMap"><code>mergeMap</code></a> - When you want to preserve all values of the inner observable</li>
+                        <li class="fragment"><a target="_blank" href="https://rxmarbles.com/#switchMap"><code>switchMap</code></a> - If only one inner observable should be active at a time</li>
+                        <li class="fragment"><a target="_blank" href="https://rxmarbles.com/#concatMap"><code>concatMap</code></a> - If the order of emission of inner observables is important</li>
+                        <li class="fragment"><a target="_blank" href="https://www.learnrxjs.io/operators/transformation/exhaustmap.html"><code>exhaustMap</code></a> - If the outer observable should be ignored while the inner observable is active</li>
+                    </ul>
+                </section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true },
+                    // Zoom in and out with Alt+click
+		            { src: 'plugin/zoom-js/zoom.js', async: true },
+				]
+			});
+		</script>
+	</body>
+</html>
